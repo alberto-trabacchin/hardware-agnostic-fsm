@@ -1,21 +1,9 @@
 {
     "configurations": [
         {
-            "name": "STM32-Target",
-            "compilerPath": "/usr/bin/arm-none-eabi-gcc", 
-            "cStandard": "c11",
+            "name": "CMake-IntelliSense",
             "intelliSenseMode": "linux-gcc-arm",
-            "compileCommands": "${workspaceFolder}/build-target/compile_commands.json",
-            "queryDriver": [
-                "/usr/bin/arm-none-eabi-gcc"
-            ]
-        },
-        {
-            "name": "Linux-Host",
-            "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands": "${workspaceFolder}/build-host/compile_commands.json"
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4
