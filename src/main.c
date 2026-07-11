@@ -1,47 +1,46 @@
-#include <stdint.h>
+#include <stddef.h>
+#include "stm32f4xx.h"
+#include "motor_fsm.h"
+#include "utils.h"
 
-// 1. Indirizzi per STM32F446RE
-#define RCC_AHB1ENR  (*(volatile uint32_t *)(0x40023830))
-#define GPIOA_MODER  (*(volatile uint32_t *)(0x40020000))
-#define GPIOA_ODR    (*(volatile uint32_t *)(0x40020014))
+// Funzioni HAL per la FSM
+void hw_set_motor(bool on) {
+    if (on) GPIOA->ODR |= GPIO_ODR_OD5;
+    else    GPIOA->ODR &= ~GPIO_ODR_OD5;
+}
 
-// 2. Setup dello Stack (Fine della RAM)
-#define STACK_TOP    0x20020000
+bool hw_read_button(void) {
+    // PC13 è active low sulla Nucleo
+    return !(GPIOC->IDR & GPIO_IDR_ID13);
+}
 
-// Prototipi
-void Reset_Handler(void);
+int main(void) {
+    // SystemInit() viene chiamata automaticamente dallo startup_stm32f446xx.S
+    // quindi qui la FPU è già attiva.
 
-// 3. Tabella dei Vettori Minima (forzata all'inizio del binario)
-__attribute__((section(".isr_vector")))
-const uint32_t vtable[] = {
-    STACK_TOP,            // 0. Puntatore allo Stack
-    (uint32_t)Reset_Handler // 1. Indirizzo di avvio
-};
-
-// 4. Punto di ingresso
-void Reset_Handler(void) {
-    // Abilita clock porta A
-    RCC_AHB1ENR |= (1UL << 0);
+    // 1. Configura l'hardware
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIOCEN;
     
-    // Configura PA5 come output
-    GPIOA_MODER &= ~(3UL << 10);
-    GPIOA_MODER |=  (1UL << 10);
+    GPIOA->MODER &= ~(GPIO_MODER_MODER5);
+    GPIOA->MODER |=  (GPIO_MODER_MODE5_0);
+    
+    GPIOC->MODER &= ~(GPIO_MODER_MODER13);
 
-    while(1) {
-        // ACCENDI IL LED FISSO
-        GPIOA_ODR |= (1UL << 5);
-        
-        // Se vuoi vederlo lampeggiare, scommenta sotto
+    // 2. Inizializza FSM
+    motor_fsm_hal_t my_hal = {
+        .set_motor = hw_set_motor,
+        .read_button = hw_read_button,
+        .read_temp = NULL // o una tua funzione
+    };
+    motor_fsm_init(&my_hal);
 
-        for(volatile int i=0; i<500000; i++);
-        GPIOA_ODR &= ~(1UL << 5);
-        for(volatile int i=0; i<500000; i++);
+    // 3. Loop
+    while (1) {
+        // Se il pulsante è premuto (ID13 == 0), accendi il LED (OD5 = 1)
+        if (!(GPIOC->IDR & GPIO_IDR_ID13)) {
+            GPIOA->ODR |= GPIO_ODR_OD5;
+        } else {
+            GPIOA->ODR &= ~GPIO_ODR_OD5;
+        }
     }
 }
-
-// Funzioni dummy per il linker
-void _exit(int status) { 
-    (void)status;
-    while(1); 
-}
-void SystemInit(void) {}
