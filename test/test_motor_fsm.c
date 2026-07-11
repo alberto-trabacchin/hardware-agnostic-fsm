@@ -1,12 +1,12 @@
 #include "unity.h"
 #include "motor_fsm.h"
 
-// Variabili di stato simulate (mock)
+// Mock state variables
 static bool mock_motor_state = false;
 static bool mock_button_state = false;
 static float mock_temp_state = 25.0f;
 
-// Funzioni mock
+// Mock functions
 static void mock_set_motor(bool on) {
     mock_motor_state = on;
 }
