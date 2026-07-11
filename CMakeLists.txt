@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 project(ProgettoFSM C ASM) # Abilitiamo anche il supporto all'Assembly per lo startup file
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Condizione: stiamo compilando per STM32 (Cross-compilazione)?
 if(CMAKE_SYSTEM_NAME STREQUAL "Generic")

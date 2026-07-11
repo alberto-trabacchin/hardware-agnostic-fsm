@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "host",
+      "displayName": "Host (Linux)",
+      "binaryDir": "${sourceDir}/build-host",
+      "generator": "Unix Makefiles"
+    },
+    {
+      "name": "target",
+      "displayName": "Target (STM32)",
+      "binaryDir": "${sourceDir}/build-target",
+      "generator": "Unix Makefiles",
+      "toolchainFile": "${sourceDir}/cmake/arm-none-eabi.cmake"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "host",
+      "configurePreset": "host"
+    },
+    {
+      "name": "target",
+      "configurePreset": "target"
+    }
+  ]
+}
