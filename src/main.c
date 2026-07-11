@@ -32,14 +32,16 @@ void Reset_Handler(void) {
         GPIOA_ODR |= (1UL << 5);
         
         // Se vuoi vederlo lampeggiare, scommenta sotto
-        /*
+
         for(volatile int i=0; i<500000; i++);
         GPIOA_ODR &= ~(1UL << 5);
         for(volatile int i=0; i<500000; i++);
-        */
     }
 }
 
 // Funzioni dummy per il linker
-void _exit(int status) { while(1); }
+void _exit(int status) { 
+    (void)status;
+    while(1); 
+}
 void SystemInit(void) {}
