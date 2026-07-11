@@ -33,7 +33,7 @@ FetchContent_MakeAvailable(stm32f4_hal_driver)
 # 2. GESTIONE DEI SORGENTI DEL FIRMWARE
 # ==========================================
 
-# Raccogli tutti i file .c del driver HAL ufficiale (escludendo i template)
+# Raccogli tutti i file .c del driver HAL ufficiale
 file(GLOB STM32_HAL_SRCS "${stm32f4_hal_driver_SOURCE_DIR}/Src/stm32f4xx_hal*.c")
 list(FILTER STM32_HAL_SRCS EXCLUDE REGEX ".*_template\\.c")
 
@@ -44,9 +44,9 @@ set(STM32_FIRMWARE_SRCS
     ${cmsis_device_stm32f4_SOURCE_DIR}/Source/Templates/system_stm32f4xx.c
 )
 
-# File di startup ufficiale recuperato da CMSIS
+# USA IL TUO FILE DI STARTUP LOCALE (fondamentale)
 set(STM32_FIRMWARE_ASM_SRCS
-    ${cmsis_device_stm32f4_SOURCE_DIR}/Source/Templates/gcc/startup_stm32f446xx.s
+    startup_stm32f446retx.s
 )
 
 # ==========================================
