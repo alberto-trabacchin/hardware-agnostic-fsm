@@ -1,6 +1,7 @@
 # DISATTIVA TUTTO IL RESTO PER QUESTO TEST
 add_executable(firmware_fsm 
     main.c
+    syscalls.c
 )
 
 # Flag minimi per far capire al compilatore che è un Cortex-M4
